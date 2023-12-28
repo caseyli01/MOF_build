@@ -5,20 +5,20 @@ This version corrects the Zr cluster position based on the framework structure.
 
 Lines in script need to be modified are as below:
 
-'''
+''' 
 MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")  
-frame = MOF_build.build.readpdb("FM3M_primitive3.pdb")
-extra_termination = MOF_build.build.readpdb("methyl.pdb")
-extra_point_index = 1
+frame = MOF_build.build.readpdb("FM3M_primitive3.pdb") 
+extra_termination = MOF_build.build.readpdb("methyl.pdb") 
+extra_point_index = 1 
 distance_extra_terimination = 1.7                                  
-defined_ATOM = 'He'
-defined_ATOM_M = 'Zr' 
+defined_ATOM = 'He' 
+defined_ATOM_M = 'Zr'  
 cutoff = 5  
-cut_residue_name = 'CUT'
-metal_residue_name = 'ZR1'
-outfile_name = 'frame_MOF'
-subfolder = 'frame_MOF'
-path_residue = 'Residues'
+cut_residue_name = 'CUT' 
+metal_residue_name = 'ZR1' 
+outfile_name = 'frame_MOF' 
+subfolder = 'frame_MOF' 
+path_residue = 'Residues' 
 
 '''
 
