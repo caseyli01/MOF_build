@@ -5,7 +5,7 @@ This version corrects the Zr cluster position based on the framework structure.
 
 Lines in script need to be modified are as below:
 
-''' 
+**
 MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")  
 frame = MOF_build.build.readpdb("FM3M_primitive3.pdb") 
 extra_termination = MOF_build.build.readpdb("methyl.pdb") 
@@ -20,7 +20,7 @@ outfile_name = 'frame_MOF'
 subfolder = 'frame_MOF' 
 path_residue = 'Residues' 
 
-'''
+**
 
 Need a linker file (MLM_filename) with a pair of location-assisted atoms, the location-assisted atoms form the framework structure (frame),
 which only need the relative struture, whose edge length don't need to be equal to the real edge length in MOF.
