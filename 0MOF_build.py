@@ -10,8 +10,7 @@ MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")
 frame = MOF_build.build.readpdb("FM3M_primitive3.pdb")
 extra_termination = MOF_build.build.readpdb("methyl.pdb")
 extra_point_index = 1
-distance_extra_terimination = 1.7
-#print(MLM_filename.shape)                                                  
+distance_extra_terimination = 1.7                                             
 defined_ATOM = 'He'
 defined_ATOM_M = 'Zr' 
 cutoff = 5  
