@@ -13,11 +13,10 @@ def residues2xyz(path):
             newxyz = []
             newxyz.append(str(number)+'\n'+name+'\n')
             for i in range (number):
-                    # Split the line into individual values (assuming they are separated by spaces)
                     values = lines[i].split()
-                    value_label = values[0] 
+                    value_label = values[1] 
                     value_label = re.sub(r'\d', '', value_label)
-                    try:                   
+                    try:                      
                         value_x = float(values[4]) #x      
                         value_y = float(values[5]) #y
                         value_z = float(values[6]) #z
