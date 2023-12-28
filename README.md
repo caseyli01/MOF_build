@@ -28,8 +28,8 @@ which only need the relative struture, whose edge length don't need to be equal 
   MLM_filename = MOF_build.build.readpdb("linker.pdb")  
   frame = MOF_build.build.readpdb("FM3M_primitive3.pdb")       
 
-##!!!The location-assisted atoms in the prepared *.pdb file have to be with the same atom name (atom label), and have to be unique enough in case to make the programme gets lost in the huge candidates.!!!
-##!!!NEVER USE common atoms, like C O N H etc.!!!
+!!!The location-assisted atoms in the prepared *.pdb file have to be with the same atom name (atom label), and have to be unique enough in case to make the programme gets lost in the huge candidates.!!!
+!!!NEVER USE common atoms, like C O N H etc.!!!
 
 The connector metal cluster atom_name of MOF should be announced in the start to separate the linker and metal-cluster for further generation.
 
