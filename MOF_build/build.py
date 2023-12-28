@@ -814,7 +814,7 @@ def get_framenode_octahedral(point_A,points_n,MM_l,df1,Metal_file,linker_cut_cou
         for j in range(len(O_oh)):
             new_positions=O_oh[j]+point_A_frame
             O_oh_df_left = pd.DataFrame(np.zeros((1, 4)),columns = ['Atom_label','Residue','Res_number','Note'])
-            O_oh_df_left['Atom_label'] = 'Oh'
+            O_oh_df_left['Atom_label'] = 'O1'
             O_oh_df_left['Residue'] = 'OH'
             O_oh_df_left['Res_number'] = Metal_count
             O_oh_df_left['Note'] = 'O_OH'
