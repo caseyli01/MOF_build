@@ -10,7 +10,8 @@ MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")
 frame = MOF_build.build.readpdb("FM3M_primitive3.pdb")
 extra_termination = MOF_build.build.readpdb("methyl.pdb")
 extra_point_index = 1
-distance_extra_terimination = 1.7                                             
+distance_extra_terimination = 1.7
+#print(MLM_filename.shape)                                                  
 defined_ATOM = 'He'
 defined_ATOM_M = 'Zr' 
 cutoff = 5  
@@ -108,4 +109,5 @@ print('\n'+"Time cost (s):   "+str(endTime-startTime))
 
 MOF_build.output.clean()
 MOF_build.residue.residues2xyz(residue_path)
+MOF_build.residue.residues2pdb(residue_path)
 MOF_build.residue.clean(residue_path)
