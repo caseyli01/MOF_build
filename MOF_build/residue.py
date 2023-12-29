@@ -62,8 +62,8 @@ def residues2pdb(path):
                         # Extract values based on their positions in the format string
                         value1 = 'ATOM'
                         value2 = i+1
-                        value3 = values[0] #label
-                        value4 = values[1] #residue
+                        value3 = values[1] #label
+                        value4 = values[2] #residue
                         value5 = 1 #residue number
                         value6 = float(values[4]) #x      
                         value7 = float(values[5]) #y
@@ -80,8 +80,8 @@ def residues2pdb(path):
                     except ValueError:
                         value1 = 'ATOM'
                         value2 = i+1
-                        value3 = values[0] #label
-                        value4 = values[1] #residue
+                        value3 = values[1] #label
+                        value4 = values[2] #residue
                         value5 = 1 #residue number
                         value6 = float(values[5]) #x      
                         value7 = float(values[6]) #y
