@@ -407,10 +407,10 @@ def get_cubeface(array1):
     for i in range(1):
         for j in  range(len(array1)):
             v= array1[i]-array1[j]
-            if 1.1*length[1]>np.linalg.norm(v) > 0.99*length[1]:
+            if 1.1*length[1]>np.linalg.norm(v) > 0.90*length[1]:
                 #b.append(i)
                 b.append(j)
-            if 1.1*length[3]>np.linalg.norm(v) > 0.99*length[3]:
+            if 1.1*length[3]>np.linalg.norm(v) > 0.90*length[3]:
                 #b.append(i)
                 c.append(j)
     topface=array1[b]
