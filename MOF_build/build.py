@@ -397,7 +397,7 @@ def get_cubeface(array1):
     for i in range(1):
         for j in  range(len(array1)):
             v= array1[i]-array1[j]
-            length.append(round(np.linalg.norm(v),1))
+            length.append(round(np.linalg.norm(v),0))
 
     length = list(set(length))
     length.sort()
