@@ -250,6 +250,7 @@ def unique_rotation_matrix(unique_vector,point_A,point_B):
             rotation_matrixes.append(rotation_matrix)
         else:
             rotation_matrix = np.array([[1,0,0],[0,1,0],[0,0,1]])
+            rotation_matrixes.append(rotation_matrix)
         
     return rotation_matrixes
 
