@@ -51,7 +51,7 @@ def outgro(df_all,output,Hecount):
             value_z = float(values[5])/10 #z
             #value11 = values[6] #note
             # Format the values using the specified format string
-            formatted_line = "%5d%-5s%5s%5d%8.3f%8.3f%8.3f" % (
+            formatted_line = "%5d%-5s%5s%5d%8.5f%8.5f%8.5f" % (
                         value_resnumber, value_resname, value_label, value_atom_number, value_x, value_y, value_z
             )        
             newgro.append(formatted_line+'\n')        
