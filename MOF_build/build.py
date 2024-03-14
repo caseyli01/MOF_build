@@ -837,3 +837,65 @@ def get_framenode_octahedral(point_A,points_n,MM_l,df1,Metal_file,linker_cut_cou
     pd.concat([O_oh_df,H_oh_df],ignore_index=True, join = 'outer').to_csv(residue_path+'OH.txt', sep='\t', header = None)
 
     return df_octa
+
+def calculate_MOF_linker_tetradentate(point_A,point_B,points_n,MM_l,df1,L_filename,count):
+    df_mof = df1 
+    #TODO:df_mof = pd.DataFrame() but need to be sure the columns positions
+    residue_count = count
+    unique_vector = np.array(search_unique_vector(df1,MM_l))
+    metal_center_in_porphyrin_analogue = []
+    for i in range(points_n):
+#for i in range(6,7):
+        for j in range(i,points_n):
+            x = round(length_square(df1.loc[i],df1.loc[j]))
+            if ( x == round(MM_l))  :
+                point_A_frame =  np.asarray(df1.loc[i,['x','y','z']],dtype = float)
+                point_B_frame =  np.asarray(df1.loc[j,['x','y','z']],dtype = float)
+                metal_atom = str((point_A_frame+point_B_frame)/2)
+                
+                if metal_atom not in metal_center_in_porphyrin_analogue:
+                #set A to (0,0,0)
+                    point_A_0 = point_A -point_A
+                    AB_S1 = point_B -point_A
+                    AB_S2 = point_B_frame -point_A_frame
+                    metal_center_in_porphyrin_analogue.append(metal_atom)
+
+                    rotation_axis = calculate_normal_vector(point_A_0,AB_S1,AB_S2)
+                    rotation_angle = -1*calculate_rotation_angle(point_A_0,AB_S1,AB_S2)
+                    rotation_matrix = calculate_rotation_matrix(rotation_angle,rotation_axis)
+                    linker_positions=np.dot(L_filename.loc[:,['x','y','z']].values-point_A, rotation_matrix)
+                    # use Zr_linker to locate self rotation matrix 
+                    newZr_inlinker = np.dot(Zr_linker.loc[:,['x','y','z']].values-point_A, rotation_matrix)               
+                    vZr_inlinker = newZr_inlinker[0]-newZr_inlinker[1]
+                    topZr_inocta = find_correspond_octa_tops(AB_S2,octa)
+                    #print(topZr_inocta)
+                    vZr_incluster = topZr_inocta[0]-topZr_inocta[1]
+                    self_rotation_axis = calculate_normal_vector(point_A_0,vZr_incluster,vZr_inlinker)
+                    self_rotation_angle =  calculate_rotation_angle(point_A_0,vZr_incluster,vZr_inlinker)
+                    #print(self_rotation_angle,self_rotation_axis)        
+                    self_rotation_matrix = calculate_rotation_matrix(self_rotation_angle,self_rotation_axis) 
+                    #print(self_rotation_matrix)
+                    #new_positions = np.dot(linker_positions-newZr_inlinker[1],self_rotation_matrix)+newZr_inlinker[1]+point_A_frame                
+                    midZr_octa= 0.5*(topZr_inocta[0]+newZr_inlinker[1])
+                    new_positions = np.dot(linker_positions-midZr_octa,self_rotation_matrix)+midZr_octa+point_A_frame
+                    print("count")
+                
+                    df_left = pd.DataFrame(columns = ['Atom_label','Residue','Res_number','Note'])
+                    df_left.loc[:,'Atom_label'] = L_filename.loc[:,'Atom_label']
+                    df_left.loc[:,'Residue'] = L_filename.loc[:,'Residue']
+                    df_left.loc[:,'Res_number'] = residue_count
+                    df_left.loc[:,'Note'] = L_filename.loc[:,'Note']
+                    
+                    df_right = pd.DataFrame(linker_positions,columns = ['x','y','z'])
+                    df = pd.concat([df_left,df_right],axis = 1, join = 'outer') 
+                    df_mof = pd.concat([df_mof,df], ignore_index=True,keys=['df_mof', 'df'], join = 'outer')
+                    #print(df_left,df_right,df_mof)
+                    residue_count += 1
+    
+    return df_mof
+
+
+
+
+           
+
