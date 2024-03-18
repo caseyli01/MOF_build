@@ -6,9 +6,9 @@ import os
 #import glob
 startTime = datetime.datetime.now()
 
-MLM_filename = MOF_build.build.readpdb("TCP.pdb")  
+#MLM_filename = MOF_build.build.readpdb("TCP.pdb")  
 
-#MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")  
+MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")  
 
 frame = MOF_build.build.readpdb("FM3M_primitive2.pdb")
 extra_termination = MOF_build.build.readpdb("methyl.pdb")
@@ -83,8 +83,8 @@ print('\n'"number of linkers:   "+str(linker_n))
 
 #count =  1+points_n
 count = 1
-#df_mof = MOF_build.build.calculate_MOF_linker(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count)
-df_mof = MOF_build.build.calculate_MOF_linker_tetradentate(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count)
+df_mof = MOF_build.build.calculate_MOF_linker(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count)
+#df_mof = MOF_build.build.calculate_MOF_linker_tetradentate(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count)
 df_mof.to_csv('example_MOF_in.gro', sep='\t', header = None, index = False)
 
 

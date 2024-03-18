@@ -588,11 +588,11 @@ def calculate_MOF_linker(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,
 
                 df_left = None
                 df_left = pd.DataFrame(columns = ['Atom_label','Residue','Res_number','Note'])
-                df_left.loc[:,'Atom_label'] = L_filename.loc[:,'Atom_label']
-                df_left.loc[:,'Residue'] = L_filename.loc[:,'Residue']
-                df_left.loc[:,'Res_number'] = residue_count
-                df_left.loc[:,'Note'] = L_filename.loc[:,'Note']
-                
+                #df_left.loc[:,'Atom_label'] = L_filename.loc[:,'Atom_label']
+                df_left['Atom_label'] = L_filename['Atom_label']
+                df_left['Residue'] = L_filename['Residue']
+                df_left['Res_number'] = residue_count
+                df_left['Note'] = L_filename['Note']
                 df_right = pd.DataFrame(new_positions,columns = ['x','y','z'])
                 df = pd.concat([df_left,df_right],axis = 1, join = 'outer') 
                 df_mof = pd.concat([df_mof,df], ignore_index=True,keys=['df_mof', 'df'], join = 'outer')
@@ -652,11 +652,11 @@ def calculate_MOF_CUT_TERM(point_A,point_B,points_n,MM_l,df1,PMMP_file,Metal_fil
 
                 df_right = pd.DataFrame(new_positions,columns = ['x','y','z'])       
                 df_left = pd.DataFrame(columns = ['Atom_label','Residue','Res_number','Note'])
-                df_left.loc[:,'Atom_label'] = PMMP_file.loc[:,'Atom_label'] 
-                df_left.loc[:,'Residue'] = Residue_name
+                df_left['Atom_label'] = PMMP_file['Atom_label'] 
+                df_left['Residue'] = Residue_name
                 #df_left.loc[:,'Residue'] = PMMP_file.loc[:,'Residue']
-                df_left.loc[:,'Res_number'] = residue_Term_count
-                df_left.loc[:,'Note'] = PMMP_file.loc[:,'Note']
+                df_left['Res_number'] = residue_Term_count
+                df_left['Note'] = PMMP_file['Note']
                 #df_left = df_left.reset_index(drop = True)
                 df = pd.concat([df_left,df_right],axis = 1) 
                 residue_Term_count += 1
