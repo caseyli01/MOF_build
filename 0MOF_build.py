@@ -40,7 +40,7 @@ for i in range(points_n):
             edge = MOF_build.build.length_square(frame.loc[i],frame.loc[j])
             edge_length.append(edge)
 edge_length.sort()      
-print(edge_length)
+#print(edge_length)
 #frame_edge = min(edge_length)                                       
 frame_edge = 50   #should be the square of expected length
 
@@ -119,4 +119,4 @@ MOF_build.residue.residues2xyz(residue_path)
 MOF_build.residue.residues2pdb(residue_path)
 MOF_build.residue.residues2gro(residue_path)
 MOF_build.residue.clean(residue_path)
-#TODO:
+#TODO:check version

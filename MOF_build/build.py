@@ -64,7 +64,7 @@ def readpdb(pdb):
         fp_w.writelines(lines)
     
 
-    data = pd.read_csv(outputfile+'.txt',delim_whitespace=True,names=['Atom_label','Residue','Res_number','x','y','z','Note'])
+    data = pd.read_csv(outputfile+'.txt',sep='\s+',names=['Atom_label','Residue','Res_number','x','y','z','Note'])
     return data
 
 
@@ -174,9 +174,13 @@ def calculate_user_deifined_termination(He,Cut_in_linker,input,index,d):
     oldC = np.array(input.loc[index-1, ['x','y','z']])
     newC= FA+d*normalize_vector(Y_FA)
     translation = newC-oldC
-    extra = input.loc[:, ['x','y','z']]+translation
-    input.loc[:,['x','y','z']] = extra
-    input.loc[:,'Residue'] = 'CUT'
+    
+    extra = input.loc[:,['x','y','z']]+translation
+    #extra_df = pd.DataFrame(extra,columns=['x','y','z'])
+    input['x']= extra['x']
+    input['y']= extra['y']
+    input['z']= extra['z']
+    input['Residue'] = 'CUT'
     #print(input)
     return input
 
@@ -527,12 +531,12 @@ def rotated_node(octa,array1):
     BD=[]
     for j in range(1,len(ABCDface)):
         cos = calculate_cos(A,ABCDface[j])
-        print(cos)
+        #print(cos)
         if 179<cos<181:
             C=ABCDface[j]
         else:
             BD.append(ABCDface[j])
-    print(BD)
+    #print(BD)
     B=BD[0]
     D=BD[1]
     rotation_axis=E-F
@@ -598,7 +602,6 @@ def calculate_MOF_linker(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,
                 df_mof = pd.concat([df_mof,df], ignore_index=True,keys=['df_mof', 'df'], join = 'outer')
                 #print(df_left,df_right,df_mof)
                 residue_count += 1
-    print(df_left)
     return df_mof
 
 
