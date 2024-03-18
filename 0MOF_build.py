@@ -10,7 +10,7 @@ MLM_filename = MOF_build.build.readpdb("TCP.pdb")
 
 #MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")  
 
-frame = MOF_build.build.readpdb("FM3M_primitive22.pdb")
+frame = MOF_build.build.readpdb("FM3M_primitive2.pdb")
 extra_termination = MOF_build.build.readpdb("methyl.pdb")
 extra_point_index = 1
 distance_extra_terimination = 1.7
