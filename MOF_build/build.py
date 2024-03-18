@@ -582,7 +582,7 @@ def calculate_MOF_linker(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,
                 midZr_octa= 0.5*(topZr_inocta[0]+newZr_inlinker[1])
                 new_positions = np.dot(linker_positions-midZr_octa,self_rotation_matrix)+midZr_octa+point_A_frame
 
-
+                df_left = None
                 df_left = pd.DataFrame(columns = ['Atom_label','Residue','Res_number','Note'])
                 df_left.loc[:,'Atom_label'] = L_filename.loc[:,'Atom_label']
                 df_left.loc[:,'Residue'] = L_filename.loc[:,'Residue']
@@ -594,6 +594,7 @@ def calculate_MOF_linker(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,
                 df_mof = pd.concat([df_mof,df], ignore_index=True,keys=['df_mof', 'df'], join = 'outer')
                 #print(df_left,df_right,df_mof)
                 residue_count += 1
+    print(df_left)
     return df_mof
 
 
