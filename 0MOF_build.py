@@ -6,11 +6,12 @@ import os
 #import glob
 startTime = datetime.datetime.now()
 
-#MLM_filename = MOF_build.build.readpdb("TCP.pdb")  
+MLM_filename = MOF_build.build.readpdb("TCP.pdb")  #TODO:
 
-MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")  
+#MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")  
 
-frame = MOF_build.build.readpdb("FM3M_primitive2.pdb")
+frame = MOF_build.build.readpdb("FM3M_primitive2.pdb")#TODO:
+#frame = MOF_build.build.readpdb("cube.pdb")
 extra_termination = MOF_build.build.readpdb("methyl.pdb")
 extra_point_index = 1
 distance_extra_terimination = 1.7
@@ -23,7 +24,7 @@ metal_residue_name = 'ZR1'
 outfile_name = 'frame_MOF'
 subfolder = 'frame_MOF'
 path_residue = 'Residues'
- 
+#
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------#
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -40,9 +41,10 @@ for i in range(points_n):
             edge = MOF_build.build.length_square(frame.loc[i],frame.loc[j])
             edge_length.append(edge)
 edge_length.sort()      
-#print(edge_length)
-#frame_edge = min(edge_length)                                       
-frame_edge = 50   #should be the square of expected length
+print(edge_length)
+#frame_edge = min(edge_length)      #TODO:                            
+
+frame_edge = 50  #TODO: should be the square of expected length
 
 L_filename = MOF_build.input.getL_file(MLM_filename,defined_ATOM,defined_ATOM_M)
 L_filename.to_csv(residue_path+'linker.txt', sep='\t', header = None)
@@ -84,8 +86,9 @@ print('\n'"number of linkers:   "+str(linker_n))
 #count =  1+points_n
 count = 1
 df_mof = MOF_build.build.calculate_MOF_linker(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count)
-#df_mof = MOF_build.build.calculate_MOF_linker_tetradentate(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count)
-df_mof.to_csv('example_MOF_in.gro', sep='\t', header = None, index = False)
+
+#TODO:df_mof = MOF_build.build.calculate_MOF_linker_tetradentate(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count)
+df_mof.to_csv('example_MOF_in.gro', sep='\t', header = None, index = False) #TODO:
 
 
 # for Cut points residue_Term_count = ligand_n+1

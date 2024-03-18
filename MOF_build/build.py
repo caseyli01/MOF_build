@@ -888,13 +888,13 @@ def calculate_MOF_linker_tetradentate(point_A,point_B,points_n,MM_l,df1,L_filena
                     #new_positions = np.dot(linker_positions-newZr_inlinker[1],self_rotation_matrix)+newZr_inlinker[1]+point_A_frame                
                     midZr_octa= 0.5*(topZr_inocta[0]+newZr_inlinker[1])
                     new_positions = np.dot(linker_positions-midZr_octa,self_rotation_matrix)+midZr_octa+point_A_frame
-                    print("count")
+                    #print("count")
                 
                     df_left = pd.DataFrame(columns = ['Atom_label','Residue','Res_number','Note'])
-                    df_left.loc[:,'Atom_label'] = L_filename.loc[:,'Atom_label']
-                    df_left.loc[:,'Residue'] = L_filename.loc[:,'Residue']
-                    df_left.loc[:,'Res_number'] = residue_count
-                    df_left.loc[:,'Note'] = L_filename.loc[:,'Note']
+                    df_left['Atom_label'] = L_filename['Atom_label']
+                    df_left['Residue'] = L_filename['Residue']
+                    df_left['Res_number'] = residue_count
+                    df_left['Note'] = L_filename['Note']
                     df_right = pd.DataFrame(new_positions,columns = ['x','y','z'])
                     df = pd.concat([df_left,df_right],axis = 1, join = 'outer') 
                     df_mof = pd.concat([df_mof,df], ignore_index=True,keys=['df_mof', 'df'], join = 'outer')
