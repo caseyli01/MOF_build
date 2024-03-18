@@ -6,8 +6,11 @@ import os
 #import glob
 startTime = datetime.datetime.now()
 
-MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")  
-frame = MOF_build.build.readpdb("FM3M_primitive.pdb")
+MLM_filename = MOF_build.build.readpdb("TCP.pdb")  
+
+#MLM_filename = MOF_build.build.readpdb("opt_linker.pdb")  
+
+frame = MOF_build.build.readpdb("FM3M_primitive2.pdb")
 extra_termination = MOF_build.build.readpdb("methyl.pdb")
 extra_point_index = 1
 distance_extra_terimination = 1.7
@@ -36,9 +39,10 @@ for i in range(points_n):
         if (i < j):
             edge = MOF_build.build.length_square(frame.loc[i],frame.loc[j])
             edge_length.append(edge)
-
-frame_edge = min(edge_length)                                       
-#frame_edge = 50   #should be the square of expected length
+edge_length.sort()      
+print(edge_length)
+#frame_edge = min(edge_length)                                       
+frame_edge = 50   #should be the square of expected length
 
 L_filename = MOF_build.input.getL_file(MLM_filename,defined_ATOM,defined_ATOM_M)
 L_filename.to_csv(residue_path+'linker.txt', sep='\t', header = None)
@@ -55,9 +59,11 @@ point_B = np.asarray(MLM_filename.loc[ATOM_index[1],['x','y','z']],dtype = float
 
 #get outer points positions 
 #outer points xyz compared to point_A+compared to point_B --> new PMMP file                                                               
-Cut_in_linker = MOF_build.build.find_points_in_cutoff(L_filename, point_A, point_B, cutoff).reset_index(drop=True)   
+Cut_in_linker = MOF_build.build.find_points_in_cutoff(L_filename, point_A, point_B, cutoff).reset_index(drop=True) 
+ 
 Extra = MOF_build.build.calculate_user_deifined_termination(M_filename,Cut_in_linker,extra_termination,extra_point_index,distance_extra_terimination)
 PMMP_file = pd.concat([Cut_in_linker,Extra], ignore_index=True).reset_index(drop=True)
+
 PMMP_file.to_csv(residue_path+'CUT.txt', sep='\t', header = None)
 print('\n'+"(unit = A)Atoms in ligand in cutoff range around ligand top point: "+'\n',PMMP_file)
 
@@ -77,7 +83,8 @@ print('\n'"number of linkers:   "+str(linker_n))
 
 #count =  1+points_n
 count = 1
-df_mof = MOF_build.build.calculate_MOF_linker(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count)
+#df_mof = MOF_build.build.calculate_MOF_linker(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count)
+df_mof = MOF_build.build.calculate_MOF_linker_tetradentate(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count)
 df_mof.to_csv('example_MOF_in.gro', sep='\t', header = None, index = False)
 
 

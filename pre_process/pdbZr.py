@@ -3,11 +3,13 @@ import pandas as pd
 a = 2.635
 b = 1.755
 d_HeC = 4.506
-input = 'NPI2.pdb'
-output = '3.pdb'
+input = 'porphyrin.pdb'
+output = 'TCP.pdb'
 res_name = 'Mae'
-C1,O1,O2 = 5,3,2
-C2,O3,O4 = 6,1,4
+#C1,O1,O2 = 5,3,2
+#C2,O3,O4 = 6,1,4
+C1,O1,O2 = 56,55,57 #TCP
+C2,O3,O4 = 59,58,60
 
 def readpdb(pdb,res_name):
     inputfile = str(pdb)

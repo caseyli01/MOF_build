@@ -116,6 +116,7 @@ def calculate_rotation_angle(point_A, point_B,point_C):
     magnitude_AC = np.linalg.norm(vector_AC)
     
     cos_theta = dot_AB_AC/(magnitude_AB*magnitude_AC)
+    cos_theta = np.clip(cos_theta, -1, 1)
     theta_rad = np.arccos(cos_theta)
     #theta_degrees = np.degrees(theta)
     return theta_rad
@@ -161,7 +162,6 @@ def find_farthest_point_in_cutoff(points, center):
     distances = np.linalg.norm(points_positions - center, axis=1)
     farthest_atom_index = np.argmax(distances)
     farthest_atom = points.iloc[farthest_atom_index]
-    #print(farthest_atom)
     return farthest_atom
 
 
@@ -377,6 +377,7 @@ def calculate_angle(vector_AB, vector_AC):
     magnitude_AB = np.linalg.norm(vector_AB)
     magnitude_AC = np.linalg.norm(vector_AC)
     cos_theta = dot_AB_AC/(magnitude_AB*magnitude_AC)
+    cos_theta = np.clip(cos_theta, -1, 1)
     theta_rad = np.arccos(cos_theta)
     theta_degrees = np.degrees(theta_rad)
 
@@ -512,7 +513,7 @@ def rotated_node(octa,array1):
         for j in range(len(array1)):
             cos = calculate_cos(octa[i],array1[j])
             angle.append(cos)
-        if 0 not in angle:
+        if  all( 1 < x < 179 for x in angle):
             EF.append(octa[i])
             EFindex.append(i)
     E=EF[0]
@@ -520,15 +521,18 @@ def rotated_node(octa,array1):
 
     ABCDface=np.delete(octa, EFindex, axis=0)
 
+
     #find ABCD
     A=ABCDface[0]
     BD=[]
     for j in range(1,len(ABCDface)):
         cos = calculate_cos(A,ABCDface[j])
+        print(cos)
         if 179<cos<181:
             C=ABCDface[j]
         else:
             BD.append(ABCDface[j])
+    print(BD)
     B=BD[0]
     D=BD[1]
     rotation_axis=E-F
@@ -838,11 +842,13 @@ def get_framenode_octahedral(point_A,points_n,MM_l,df1,Metal_file,linker_cut_cou
 
     return df_octa
 
-def calculate_MOF_linker_tetradentate(point_A,point_B,points_n,MM_l,df1,L_filename,count):
+def calculate_MOF_linker_tetradentate(point_A,point_B,points_n,MM_l,df1,L_filename,Zr_linker,count):
     df_mof = df1 
     #TODO:df_mof = pd.DataFrame() but need to be sure the columns positions
     residue_count = count
     unique_vector = np.array(search_unique_vector(df1,MM_l))
+    octa_vertices = get_metal_octahedral(unique_vector)
+    octa=rotated_node(octa_vertices,unique_vector)
     metal_center_in_porphyrin_analogue = []
     for i in range(points_n):
 #for i in range(6,7):
@@ -885,12 +891,14 @@ def calculate_MOF_linker_tetradentate(point_A,point_B,points_n,MM_l,df1,L_filena
                     df_left.loc[:,'Residue'] = L_filename.loc[:,'Residue']
                     df_left.loc[:,'Res_number'] = residue_count
                     df_left.loc[:,'Note'] = L_filename.loc[:,'Note']
-                    
-                    df_right = pd.DataFrame(linker_positions,columns = ['x','y','z'])
+                    df_right = pd.DataFrame(new_positions,columns = ['x','y','z'])
                     df = pd.concat([df_left,df_right],axis = 1, join = 'outer') 
                     df_mof = pd.concat([df_mof,df], ignore_index=True,keys=['df_mof', 'df'], join = 'outer')
                     #print(df_left,df_right,df_mof)
                     residue_count += 1
+
+                else:
+                    print("overlapped")
     
     return df_mof
 
