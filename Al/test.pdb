@@ -1,0 +1,12 @@
+TITLE     MOF-Al
+REMARK   4      COMPLIES WITH FORMAT V. 3.0, 1-DEC-2006
+REMARK 888
+HETATM    9 Al   AL6   428      -8.267   7.970   0.000  1.00  0.00          Al  
+HETATM   10  DD2 AL6   428      -8.549   7.415   0.652  1.00  0.00           H  
+HETATM   11  DD3 AL6   428      -8.020   8.561   0.627  1.00  0.00           H  
+HETATM   12  DD4 AL6   428      -7.488   7.526   0.021  1.00  0.00           H  
+HETATM   13  DD5 AL6   428      -7.994   8.523  -0.650  1.00  0.00           H  
+HETATM   14  DD6 AL6   428      -8.481   7.375  -0.637  1.00  0.00           H  
+HETATM   15  DD7 AL6   428      -9.083   8.354  -0.017  1.00  0.00           H 
+HETATM    1  O1  MOH   130      -6.614   7.113   0.000  1.00  0.00           O  
+HETATM    2  H1  MOH   130      -6.614   6.125   0.000  1.00  0.00           H   

@@ -1,0 +1,81 @@
+TITLE     MOF-Al
+REMARK   4      COMPLIES WITH FORMAT V. 3.0, 1-DEC-2006
+REMARK 888
+REMARK 888 WRITTEN BY MAESTRO (A PRODUCT OF SCHRODINGER, LLC)
+HETATM    1  O1  MOH   130      -6.614   7.113   0.000  1.00  0.00           O  
+HETATM    2  H1  MOH   130      -6.614   6.125   0.000  1.00  0.00           H  
+HETATM    3  O1  MOH   131      -6.614   7.113 -16.808  1.00  0.00           O  
+HETATM    4  H1  MOH   131      -6.614   6.125 -16.808  1.00  0.00           H  
+HETATM    5  O1  MOH   134      -9.921   8.828   0.000  1.00  0.00           O  
+HETATM    6  H1  MOH   134      -9.921   9.816   0.000  1.00  0.00           H  
+HETATM    7  O1  MOH   135      -9.921   8.828 -16.808  1.00  0.00           O  
+HETATM    8  H1  MOH   135      -9.921   9.816 -16.808  1.00  0.00           H  
+HETATM    9 Al   AL6   428      -8.267   7.970   0.000  1.00  0.00          Al  
+HETATM   10  DD2 AL6   428      -8.549   7.415   0.652  1.00  0.00           H  
+HETATM   11  DD3 AL6   428      -8.020   8.561   0.627  1.00  0.00           H  
+HETATM   12  DD4 AL6   428      -7.488   7.526   0.021  1.00  0.00           H  
+HETATM   13  DD5 AL6   428      -7.994   8.523  -0.650  1.00  0.00           H  
+HETATM   14  DD6 AL6   428      -8.481   7.375  -0.637  1.00  0.00           H  
+HETATM   15  DD7 AL6   428      -9.083   8.354  -0.017  1.00  0.00           H  
+HETATM   16 Al   AL6   429     -11.575   7.970   0.000  1.00  0.00          Al  
+HETATM   17  DD2 AL6   429     -12.384   7.573   0.007  1.00  0.00           H  
+HETATM   18  DD3 AL6   429     -11.868   8.548   0.619  1.00  0.00           H  
+HETATM   19  DD4 AL6   429     -11.319   7.356   0.602  1.00  0.00           H  
+HETATM   20  DD5 AL6   429     -10.772   8.368  -0.013  1.00  0.00           H  
+HETATM   21  DD6 AL6   429     -11.259   7.379  -0.597  1.00  0.00           H  
+HETATM   22  DD7 AL6   429     -11.865   8.536  -0.640  1.00  0.00           H  
+HETATM   23 Al   AL6   438      -8.267   7.970 -16.807  1.00  0.00          Al  
+HETATM   24  DD2 AL6   438      -8.549   7.415 -16.156  1.00  0.00           H  
+HETATM   25  DD3 AL6   438      -8.020   8.561 -16.181  1.00  0.00           H  
+HETATM   26  DD4 AL6   438      -7.488   7.526 -16.787  1.00  0.00           H  
+HETATM   27  DD5 AL6   438      -7.994   8.523 -17.458  1.00  0.00           H  
+HETATM   28  DD6 AL6   438      -8.481   7.375 -17.445  1.00  0.00           H  
+HETATM   29  DD7 AL6   438      -9.083   8.354 -16.825  1.00  0.00           H  
+HETATM   30 Al   AL6   439     -11.575   7.970 -16.808  1.00  0.00          Al  
+HETATM   31  DD2 AL6   439     -12.384   7.573 -16.801  1.00  0.00           H  
+HETATM   32  DD3 AL6   439     -11.867   8.548 -16.189  1.00  0.00           H  
+HETATM   33  DD4 AL6   439     -11.319   7.356 -16.206  1.00  0.00           H  
+HETATM   34  DD5 AL6   439     -10.772   8.368 -16.821  1.00  0.00           H  
+HETATM   35  DD6 AL6   439     -11.259   7.379 -17.405  1.00  0.00           H  
+HETATM   36  DD7 AL6   439     -11.865   8.535 -17.447  1.00  0.00           H  
+CONECT    1    2
+CONECT    2    1
+CONECT    3    4
+CONECT    4    3
+CONECT    5    6
+CONECT    6    5
+CONECT    7    8
+CONECT    8    7
+CONECT    9   10   11   12   13
+CONECT    9   14   15
+CONECT   10    9
+CONECT   11    9
+CONECT   12    9
+CONECT   13    9
+CONECT   14    9
+CONECT   15    9
+CONECT   16   17   18   19   20
+CONECT   16   21   22
+CONECT   17   16
+CONECT   18   16
+CONECT   19   16
+CONECT   20   16
+CONECT   21   16
+CONECT   22   16
+CONECT   23   24   25   26   27
+CONECT   23   28   29
+CONECT   24   23
+CONECT   25   23
+CONECT   26   23
+CONECT   27   23
+CONECT   28   23
+CONECT   29   23
+CONECT   30   31   32   33   34
+CONECT   30   35   36
+CONECT   31   30
+CONECT   32   30
+CONECT   33   30
+CONECT   34   30
+CONECT   35   30
+CONECT   36   30
+END   
