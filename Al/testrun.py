@@ -229,7 +229,7 @@ def group_points_AB(x_num,y_num,z_num,dx_value,dy_value,dz_value):
 def get_center_point_of_face(p1_face,p2_face,p3_face):
     center_point = (normalize_vector(p1_face)+
                               normalize_vector(p2_face)+
-                              normalize_vector(p2_face))/3
+                              normalize_vector(p3_face))/3
     return center_point
 
 def find_solution(pAl1,pAl2,pAl1_1,pAl1_2,pAl1_3):
@@ -288,7 +288,7 @@ def calculate_node(Metal_file,linker_cut_count,Residue_name,group_A,group_B,new_
         df_node = pd.concat([df_node,df],ignore_index=True, join = 'outer')
         Metal_count += 1
     
-    return df_node
+    #return df_node
 
 def get_box_dimension(file):
     x1,x2,y1,y2,z1,z2 = get_box(file)
