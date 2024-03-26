@@ -350,7 +350,7 @@ def outgro(df_all,output,Hecount):
                         value_resnumber, value_resname, value_label, value_atom_number, value_x, value_y, value_z) 
             newgro.append(formatted_line+'\n')        
 
-        tail = get_box_dimension(df_all.iloc[4:6])+'\n'
+        tail = '100 100 100'
         newgro.append(tail)
         fp.writelines(newgro)
 
@@ -451,8 +451,8 @@ new_node_A = get_rotated_array(Al_node,q_A)
 new_node_B = get_rotated_array(Al_node,q_B)
 
 
-x_num,y_num,z_num,dx_value,dy_value,dz_value = 10,7,5,3.3,16.8,15.9
-#x_num,y_num,z_num,dx_value,dy_value,dz_value = 6,10,10,10,10,15.94
+#x_num,y_num,z_num,dx_value,dy_value,dz_value = 4,4,4,3.51,15.14,16.36
+x_num,y_num,z_num,dx_value,dy_value,dz_value = 5,3,3,3.31,16.8,15.94
 dx = dx_value*np.array([1,0,0]) #dx_value works as a scalar
 dy = dy_value*np.array([0,1,0])
 dz = dz_value*np.array([0,0,1])
@@ -470,12 +470,12 @@ B_map_1 = A_map+dy
 
 
 B_map = np.concatenate((B_map_0,B_map_1),axis=0)
-A_map = np.round(A_map,2)
-B_map = np.round(B_map,2)
+#A_map = np.round(A_map,2)
+#B_map = np.round(B_map,2)
 A_map,B_map = np.unique(A_map,axis=0),np.unique(B_map,axis=0)
 
 
-point = np.round(points,2)
+#point = np.round(points,2)
 group_A = find_overlapped_3D_array(A_map,points)
 group_B = find_overlapped_3D_array(B_map,points)
 
