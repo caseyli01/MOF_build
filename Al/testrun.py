@@ -5,11 +5,6 @@ import re
 import datetime
 startTime = datetime.datetime.now()
 
-
-
-np.set_printoptions(precision=6)
-np.set_printoptions(suppress=True)
-
 def get_box(file):
     x, y, z = [], [], []
     x, y, z = file['x'],file['y'],file['z']
@@ -36,7 +31,9 @@ def readpdb(pdb):
     with open(outputfile+'.txt','w') as fp_w:
         for i in range (linesnumber):
             # Split the line into individual values (assuming they are separated by spaces)
-            values = content[i].split()       
+            values = content[i].split() if content[i].strip() != '' else None
+            if values == None:
+                continue
             # Extract values based on their positions in the format string
             if (values[0]=='ATOM' or values[0] == 'HETATM'):
                 value1 = values[2] #atom_label
@@ -165,18 +162,27 @@ def points_generator(x_num,y_num,z_num,dx_value,dy_value,dz_value):
     dz = dz_value*np.array([[0,0,1]])
     # add x layer
     points = np.array([[0,0,0]])
-    for i in range(1,x_num):
+    for i in range(0,x_num+1):
         points = np.concatenate((points,i*dx),axis=0)
     # add y layer
     points_x =points
-    for i in range(1,y_num):
+    for i in range(0,y_num+1):
         points = np.concatenate((points,points_x+i*dy),axis = 0)
     # add z layer 
     points_xy = points
-    for i in range(1,z_num):
+    for i in range(0,z_num+1):
         points = np.concatenate((points,points_xy+i*dz),axis = 0)
-    
+    points = np.unique(points, axis = 0)
     return points
+
+def find_overlapped_3D_array(array1,array2):
+    set1 = set(map(tuple, array1.reshape(-1, array1.shape[-1])))
+    set2 = set(map(tuple, array2.reshape(-1, array2.shape[-1])))
+    # Find intersection of sets
+    overlapped_elements = set1.intersection(set2)
+    # Convert back to numpy array
+    overlapped_array = np.array(list(overlapped_elements)).reshape(-1, array1.shape[-1])
+    return overlapped_array
 
 def groupA_one_step_to_groupB(first_B,group_A,d,points):
     point_dx = group_A+d
@@ -229,7 +235,7 @@ def group_points_AB(x_num,y_num,z_num,dx_value,dy_value,dz_value):
 def get_center_point_of_face(p1_face,p2_face,p3_face):
     center_point = (normalize_vector(p1_face)+
                               normalize_vector(p2_face)+
-                              normalize_vector(p3_face))/3
+                              normalize_vector(p2_face))/3
     return center_point
 
 def find_solution(pAl1,pAl2,pAl1_1,pAl1_2,pAl1_3):
@@ -243,31 +249,33 @@ def find_solution(pAl1,pAl2,pAl1_1,pAl1_2,pAl1_3):
     solution_1_2=np.dot(vAl1_Al2,np.linalg.inv(arr_1_2))
     return solution_1_2,arr_1_2
 
-def get_rotate_array(arr,q):
+def get_rotated_array(arr,q):
     q_arr= quaternion.from_vector_part(arr)
     rotated_q_arr = q*q_arr*q.inverse()
     rotated_arr = quaternion.as_vector_part(rotated_q_arr)
     return rotated_arr
 
-def get_axis2(solution_1_2,arr_1_2,solution_1_3,arr_1_3):
-    axis1 = np.dot(solution_1_2,arr_1_2)
-    axis2 = np.dot(solution_1_3,arr_1_3)
-    q_axis = calculate_q_rotation_with_vectors(axis1,axis2)
-    dx = np.array([1,0,0])
-    axis0=quaternion.from_vector_part(dx)
-    new_axis = q_axis*axis0
-    new_axis_vector = quaternion.as_vector_part(new_axis)
-    print(new_axis_vector)
-    return new_axis_vector
- 
+def rotate_twice_linker(df_input,beginning_point,v1_file,v1_frame,v2_file,v2_frame):
+    arr = df_input.loc[:,['x','y','z']].to_numpy() - beginning_point #MOVE center (Al this case) to (0,0,0)
+    q1 = calculate_q_rotation_with_vectors(v1_file,v1_frame) 
+    q_V2 = quaternion.from_vector_part(v2_file)
+    new_q_V2 = q1*q_V2
+    new_V2_file = quaternion.as_vector_part(new_q_V2)
+    #angle = calculate_angle_rad(v1_frame,new_V2_file,v2_frame)
+    #q2 = calculate_q_rotation_with_axis_degree(v1_frame,angle)
+    q2 = calculate_q_rotation_with_vectors(new_V2_file,v2_frame)
+    q_rotate = q2*q1
+    new_array = get_rotated_array(arr,q_rotate)
+    return new_array
 
 def calculate_node(Metal_file,linker_cut_count,Residue_name,group_A,group_B,new_node_A,new_node_B):
 #rotate as group, translate as group 
     Metal_count = linker_cut_count
+    zero_lines = new_node_A.shape[0]
     df_node = pd.DataFrame()
     for i in group_A:
         new_positions=new_node_A+i
-        df_left = pd.DataFrame(np.zeros((new_node_A.shape[0], 4)),columns = ['Atom_label','Residue','Res_number','Note'])
+        df_left = pd.DataFrame(np.zeros((zero_lines, 4)),columns = ['Atom_label','Residue','Res_number','Note'])
         df_left['Atom_label'] = Metal_file['Atom_label']
         df_left['Residue'] = Metal_file['Residue']
         df_left['Res_number'] = Metal_count
@@ -278,9 +286,10 @@ def calculate_node(Metal_file,linker_cut_count,Residue_name,group_A,group_B,new_
         Metal_count += 1
     for i in group_B:
         new_positions=new_node_B+i
-        df_left = pd.DataFrame(np.zeros((new_node_B.shape[0], 4)),columns = ['Atom_label','Residue','Res_number','Note'])
+        
+        df_left = pd.DataFrame(np.zeros((zero_lines, 4)),columns = ['Atom_label','Residue','Res_number','Note'])
         df_left['Atom_label'] = Metal_file['Atom_label']
-        df_left['Residue'] = Residue_name
+        df_left['Residue'] = Metal_file['Residue']
         df_left['Res_number'] = Metal_count
         df_left['Note'] = Metal_file['Note']
         df_right = pd.DataFrame(new_positions,columns = ['x','y','z'])
@@ -288,7 +297,24 @@ def calculate_node(Metal_file,linker_cut_count,Residue_name,group_A,group_B,new_
         df_node = pd.concat([df_node,df],ignore_index=True, join = 'outer')
         Metal_count += 1
     
-    #return df_node
+    return df_node
+
+def calculate_linker(linker_file,linker_count,Residue_name,new_beginnings_array,new_linker):
+#translate by center points position, beginning point as CENTER OF PORPHYRIN like Co(body center of unit box)
+    zero_lines = new_linker.shape[0]
+    df_linker = pd.DataFrame()
+    for i in new_beginnings_array:
+        new_positions=new_linker+i
+        df_left = pd.DataFrame(np.zeros((zero_lines, 4)),columns = ['Atom_label','Residue','Res_number','Note'])
+        df_left['Atom_label'] = linker_file['Atom_label']
+        df_left['Residue'] = linker_file['Residue']
+        df_left['Res_number'] = linker_count
+        df_left['Note'] = linker_file['Note']
+        df_right = pd.DataFrame(new_positions,columns = ['x','y','z'])
+        df = pd.concat([df_left,df_right],axis = 1, join = 'outer') 
+        df_linker = pd.concat([df_linker,df],ignore_index=True, join = 'outer')
+        linker_count += 1
+    return df_linker
 
 def get_box_dimension(file):
     x1,x2,y1,y2,z1,z2 = get_box(file)
@@ -360,6 +386,18 @@ def outxyz(output,Hecount):
 
         fp.writelines(newxyz)
 
+def get_axis2(solution_1_2,arr_1_2,solution_1_3,arr_1_3):
+    axis1 = np.dot(solution_1_2,arr_1_2)
+    axis2 = np.dot(solution_1_3,arr_1_3)
+    q_axis = calculate_q_rotation_with_vectors(axis1,axis2)
+    dx = np.array([1,0,0])
+    axis0=quaternion.from_vector_part(dx)
+    new_axis = q_axis*axis0
+    new_axis_vector = quaternion.as_vector_part(new_axis)
+    print(new_axis_vector)
+    return new_axis_vector
+ 
+
 
 textbook_Metal_file = readpdb('Al_Al.pdb')
 
@@ -373,8 +411,9 @@ pAl1_1,pAl1_2,pAl1_3 =(textbook_Metal_file.loc[16, ['x','y','z']].to_numpy(),
    
 solution_1_2,arr_1_2 = find_solution(pAl1,pAl2,pAl1_1,pAl1_2,pAl1_3)
 solution_1_3,arr_1_3 = find_solution(pAl1,pAl3,pAl1_1,pAl1_2,pAl1_3)
-#print(solution_1_2,solution_1_3)
-#print(np.dot(solution_1_2,arr_1_2),np.dot(solution_1_3,arr_1_3))
+print(solution_1_2,solution_1_3)
+print(np.dot(solution_1_2,arr_1_2),np.dot(solution_1_3,arr_1_3))
+
 
 Metal_file=readpdb('test.pdb')
 axis1 = np.array([1,0,0])
@@ -382,24 +421,24 @@ axis2 =  get_axis2(solution_1_2,arr_1_2,solution_1_3,arr_1_3)
 
 axis3 = np.cross(axis1,axis2)
 
-
 point_Al = Metal_file.loc[0, ['x','y','z']].to_numpy()
 p1,p2,p3 = (Metal_file.loc[1, ['x','y','z']].to_numpy()- point_Al,
                                     Metal_file.loc[2, ['x','y','z']].to_numpy()- point_Al,
                                     Metal_file.loc[3, ['x','y','z']].to_numpy()- point_Al )     
 p1,p2,p3=normalize_vector(p1),normalize_vector(p2),normalize_vector(p3)                         
-
-arr = np.vstack((p1,p2,p3))
+arr = np.vstack([p1,p2,p3])
 V1,V2 = np.dot(solution_1_2,arr),np.dot(solution_1_3,arr)
 V1,V2 = normalize_vector(V1),normalize_vector(V2)
 
+
+
 Al_node = Metal_file.loc[:,['x','y','z']].to_numpy() - point_Al  #MOVE center (Al this case) to (0,0,0)
-q1 = calculate_q_rotation_with_vectors(V1,axis1) #TODO:
+q1 = calculate_q_rotation_with_vectors(V1,axis1) 
 q_V2 = quaternion.from_vector_part(V2)
 new_q_V2 = q1*q_V2
 new_V2 = quaternion.as_vector_part(new_q_V2)
 angle = calculate_angle_rad(axis1,new_V2,axis2)
-#print(new_V2,axis2,angle)
+print(new_V2,axis2,angle)
 #q2 = calculate_q_rotation_with_axis_degree(axis1,angle)
 q2 = calculate_q_rotation_with_vectors(new_V2,axis2)
 #q3 = quaternion.from_float_array([0,0,0,-1])
@@ -408,18 +447,92 @@ q3 = calculate_q_rotation_with_axis_degree(axis2,np.pi)*calculate_q_rotation_wit
 q_A = q2*q1
 q_B = q3*q2*q1
 
-new_node_A = get_rotate_array(Al_node,q_A)
-new_node_B = get_rotate_array(Al_node,q_B)
+new_node_A = get_rotated_array(Al_node,q_A)
+new_node_B = get_rotated_array(Al_node,q_B)
 
-x_num,y_num,z_num,dx_value,dy_value,dz_value = 100,5,5,3.31,16.8,15.94
-group_A,group_B = group_points_AB(x_num,y_num,z_num,dx_value,dy_value,dz_value)
 
+x_num,y_num,z_num,dx_value,dy_value,dz_value = 10,7,5,3.3,16.8,15.9
+#x_num,y_num,z_num,dx_value,dy_value,dz_value = 6,10,10,10,10,15.94
+dx = dx_value*np.array([1,0,0]) #dx_value works as a scalar
+dy = dy_value*np.array([0,1,0])
+dz = dz_value*np.array([0,0,1])
+
+points = points_generator(x_num,y_num,z_num,dx_value,dy_value,dz_value)
+#Amap needs to decribe all A in single unit box
+A_map_0 =  points_generator(x_num,y_num,z_num,2*dx_value,2*dy_value,dz_value)
+
+A_map_1 = A_map_0+dx+dy
+
+
+A_map = np.concatenate((A_map_0,A_map_1),axis=0)
+B_map_0 = A_map+dx
+B_map_1 = A_map+dy
+
+
+B_map = np.concatenate((B_map_0,B_map_1),axis=0)
+A_map = np.round(A_map,2)
+B_map = np.round(B_map,2)
+A_map,B_map = np.unique(A_map,axis=0),np.unique(B_map,axis=0)
+
+
+point = np.round(points,2)
+group_A = find_overlapped_3D_array(A_map,points)
+group_B = find_overlapped_3D_array(B_map,points)
+
+print(group_A.shape,group_B.shape,points.shape)
 
 linker_cut_count,Residue_name = 1,'Al'
 df_node = calculate_node(Metal_file,linker_cut_count,Residue_name,group_A,group_B,new_node_A,new_node_B)
 df_node.to_csv('node.txt',header=None,sep='\t',index=False)
 
+
 outgro(df_node,'node',0)
 outxyz('node',0)
+
+
+body_diag=(dx+dy+dz).ravel() 
+points_c = find_overlapped_3D_array(points+body_diag,points)
+center_of_unitbox_points = points_c-0.5*body_diag #Co position 
+
+'''
+rotate porphyrin or other tetradentate linker to make it algin with dx and make Co position as parameter for 2nd rotate
+for further translation 
+
+'''
+linker_file = readpdb('TCP.pdb')
+#O1 is the cross point
+O1,O2,O3 = linker_file.loc[54,['x','y','z']].to_numpy(),\
+            linker_file.loc[57,['x','y','z']].to_numpy(),\
+            linker_file.loc[51,['x','y','z']].to_numpy()
+Co = linker_file.loc[60,['x','y','z']].to_numpy()
+r1_vector_in_frame = normalize_vector(dx)
+r2_vector_in_frame = normalize_vector(dz)
+r1_vector_in_linker = normalize_vector(O2-O1)
+r2_vector_in_linker = normalize_vector(O3-O1)
+
+df_input = linker_file
+beginning_point = O1
+v1_file = r1_vector_in_linker
+v1_frame = r1_vector_in_frame
+v2_file = r2_vector_in_linker
+v2_frame = r2_vector_in_frame
+
+new_linker = rotate_twice_linker(df_input,beginning_point,v1_file,v1_frame,v2_file,v2_frame)
+rotated_new_linker = new_linker-new_linker[60] #FIXME: make Co in beginning 
+
+
+
+
+linker_count,Residue_name = 55,'TCP'
+new_beginnings_array,new_linker = center_of_unitbox_points,rotated_new_linker
+
+df_linker = calculate_linker(linker_file,linker_cut_count,Residue_name,new_beginnings_array,new_linker)
+df_linker.to_csv('linker.txt',header=None,sep='\t',index=False)
+outxyz('linker',0)
+
+df_all = pd.concat([df_node,df_linker],ignore_index=True, join = 'outer')
+df_all.to_csv('all.txt', sep='\t', header = None, index = False)
+outgro(df_all,'all',0)
+outxyz('all',0)
 endTime = datetime.datetime.now()
 print('\n'+"Time cost (s):   "+str(endTime-startTime))
