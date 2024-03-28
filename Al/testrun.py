@@ -252,6 +252,7 @@ def find_solution(pAl1,pAl2,pAl1_1,pAl1_2,pAl1_3):
 def get_rotated_array(arr,q):
     q_arr= quaternion.from_vector_part(arr)
     rotated_q_arr = q*q_arr*q.inverse()
+    #rotated_q_arr = q*q_arr
     rotated_arr = quaternion.as_vector_part(rotated_q_arr)
     return rotated_arr
 
@@ -286,7 +287,6 @@ def calculate_node(Metal_file,linker_cut_count,Residue_name,group_A,group_B,new_
         Metal_count += 1
     for i in group_B:
         new_positions=new_node_B+i
-        
         df_left = pd.DataFrame(np.zeros((zero_lines, 4)),columns = ['Atom_label','Residue','Res_number','Note'])
         df_left['Atom_label'] = Metal_file['Atom_label']
         df_left['Residue'] = Metal_file['Residue']

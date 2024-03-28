@@ -1,0 +1,13 @@
+TITLE     Structure1
+REMARK   4      COMPLIES WITH FORMAT V. 3.0, 1-DEC-2006
+REMARK 888
+REMARK 888 WRITTEN BY MAESTRO (A PRODUCT OF SCHRODINGER, LLC)
+HETATM    1  C1  UNK     1      -1.372   1.952   2.802  1.00  0.00           C  
+HETATM    2  H1  UNK     1      -1.816   2.528   3.614  1.00  0.00           H  
+HETATM    3  H2  UNK     1      -1.559   0.891   2.965  1.00  0.00           H  
+HETATM    4  H3  UNK     1      -1.817   2.258   1.855  1.00  0.00           H  
+CONECT    1    2    3    4
+CONECT    2    1
+CONECT    3    1
+CONECT    4    1
+END   
